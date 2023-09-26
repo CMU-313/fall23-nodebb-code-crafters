@@ -58,7 +58,7 @@ module.exports = function (Topics) {
         await Promise.all([
             db.sortedSetsAdd(timestampedSortedSetKeys, timestamp, topicData.tid),
             db.sortedSetsAdd([
-                'topics:views', 'topics:posts', 'topics:votes', 'topics:resolved'
+                'topics:views', 'topics:posts', 'topics:votes', 'topics:resolved',
                 `cid:${topicData.cid}:tids:votes`,
                 `cid:${topicData.cid}:tids:posts`,
                 `cid:${topicData.cid}:tids:views`,
@@ -235,6 +235,7 @@ module.exports = function (Topics) {
         posts.overrideGuestHandle(postData, data.handle);
 
         postData.votes = 0;
+        postData.resolves = false; // default to false
         postData.bookmarked = false;
         postData.display_edit_tools = true;
         postData.display_delete_tools = true;
