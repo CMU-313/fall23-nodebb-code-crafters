@@ -13,6 +13,8 @@
 
     <!-- IMPORT partials/topic/sort.tpl -->
 
+    <!-- IMPORT partials/topic/resolve.tpl -->
+
     <div class="inline-block">
     <!-- IMPORT partials/thread_tools.tpl -->
     </div>
