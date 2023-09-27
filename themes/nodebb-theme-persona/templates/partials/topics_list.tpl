@@ -70,6 +70,15 @@
                 </small>
             </h2>
         </div>
+        
+        <li component="category/topic" class="row clearfix category-item {function.generateTopicClass}" data-resolved="{{topics.isResolved}}">
+        <div class="col-md-1 hidden-sm hidden-xs stats stats-resolved">
+            {{#if topics.isResolved}}
+                <span class="resolve-status">Resolved</span>
+            {{else}}
+                <span class="resolve-status">Unresolved</span>
+            {{/if}}
+        </div>
 
         <div class="mobile-stat col-xs-2 visible-xs text-right">
             <span class="human-readable-number">{topics.postcount}</span> <a href="{config.relative_path}/topic/{topics.slug}/{topics.teaser.index}"><i class="fa fa-arrow-circle-right"></i></a>
