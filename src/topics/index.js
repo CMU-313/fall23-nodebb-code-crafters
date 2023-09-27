@@ -182,6 +182,14 @@ Topics.getTopicWithPosts = async function (topicData, set, uid, start, stop, rev
         Topics.events.get(topicData.tid, uid, reverse),
     ]);
 
+    let hasResolution = false;
+    posts.forEach((p) => {
+        if (p.content.toLowerCase().includes("resolved")) {
+            hasResolution = true;
+        }
+    });
+    posts[0].resolved = hasResolution;
+    topicData.hasResolution = hasResolution;
     topicData.thumbs = thumbs[0];
     topicData.posts = posts;
     topicData.events = events;
