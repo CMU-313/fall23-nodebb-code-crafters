@@ -71,13 +71,12 @@
             </h2>
         </div>
         
-        <li component="category/topic" class="row clearfix category-item {function.generateTopicClass}" data-resolved="{{topics.isResolved}}">
         <div class="col-md-1 hidden-sm hidden-xs stats stats-resolved">
-            {{#if topics.isResolved}}
+            <!-- IF topics.isResolved -->
                 <span class="resolve-status">Resolved</span>
-            {{else}}
+            <!-- ELSE -->
                 <span class="resolve-status">Unresolved</span>
-            {{/if}}
+            <!-- END -->
         </div>
 
         <div class="mobile-stat col-xs-2 visible-xs text-right">
