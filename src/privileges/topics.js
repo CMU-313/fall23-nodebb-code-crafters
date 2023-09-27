@@ -35,6 +35,11 @@ privsTopics.get = async function (tid, uid) {
     const deletable = (privData['topics:delete'] && (isOwner || isModerator)) || isAdministrator;
     const mayReply = privsTopics.canViewDeletedScheduled(topicData, {}, false, privData['topics:schedule']);
 
+    const forumName = await categories.getCategoryField(topicData.cid, 'name');
+    const isInSupportForum = forumName.toLowerCase().includes('support');
+    privData.read = privData.read && (!isInSupportForum || isOwner || isAdminOrMod);
+    privData['topics:read'] = privData['topics:read'] && (!isInSupportForum || isOwner || isAdminOrMod);
+
     return await plugins.hooks.fire('filter:privileges.topics.get', {
         'topics:reply': (privData['topics:reply'] && ((!topicData.locked && mayReply) || isModerator)) || isAdministrator,
         'topics:read': privData['topics:read'] || isAdministrator,
@@ -70,7 +75,9 @@ privsTopics.filterTids = async function (privilege, tids, uid) {
         return [];
     }
 
-    const topicsData = await topics.getTopicsFields(tids, ['tid', 'cid', 'deleted', 'scheduled']);
+    const isAttemptingRead = privilege === 'topics:read';
+    const topicsData = await topics.getTopicsFields(tids, ['tid', 'cid', 'uid', 'deleted', 'scheduled']);
+
     const cids = _.uniq(topicsData.map(topic => topic.cid));
     const results = await privsCategories.getBase(privilege, cids, uid);
 
@@ -83,8 +90,12 @@ privsTopics.filterTids = async function (privilege, tids, uid) {
     const canViewDeleted = _.zipObject(cids, results.view_deleted);
     const canViewScheduled = _.zipObject(cids, results.view_scheduled);
 
-    tids = topicsData.filter(t => (
+    const privileges = await Promise.all(topicsData.map(topic => privsTopics.get(topic.tid, uid)));
+    const readPrivileges = privileges.map(p => p.read);
+
+    tids = topicsData.filter((t, i) => (
         cidsSet.has(t.cid) &&
+        (!isAttemptingRead || readPrivileges[i]) &&
         (results.isAdmin || privsTopics.canViewDeletedScheduled(t, {}, canViewDeleted[t.cid], canViewScheduled[t.cid]))
     )).map(t => t.tid);
 

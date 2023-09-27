@@ -10,10 +10,10 @@ const user = require('../user');
 module.exports = function (Categories) {
     Categories.getCategoryTopics = async function (data) {
         let results = await plugins.hooks.fire('filter:category.topics.prepare', data);
-        const tids = await Categories.getTopicIds(results);
+        let tids = await Categories.getTopicIds(results);
+        tids = await privileges.topics.filterTids('topics:read', tids, data.uid);
         let topicsData = await topics.getTopicsByTids(tids, data.uid);
         topicsData = await user.blocks.filter(data.uid, topicsData);
-
         if (!topicsData.length) {
             return { topics: [], uid: data.uid };
         }
