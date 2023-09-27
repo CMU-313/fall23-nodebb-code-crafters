@@ -129,6 +129,14 @@ topicsAPI.unpin = async function (caller, data) {
     });
 };
 
+topicsAPI.resolve = async function (caller, data) {
+    await doTopicAction('resolve', 'event:topic_resolved', caller, {tids:data.tid,});
+};
+
+topicsAPI.unresolve = async function (caller,data){
+    await doTopicAction('unresolve', 'event:topic_unresolved', caller, {tids:data.tid});
+};
+
 topicsAPI.lock = async function (caller, data) {
     await doTopicAction('lock', 'event:topic_locked', caller, {
         tids: data.tids,

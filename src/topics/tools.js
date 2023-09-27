@@ -157,7 +157,7 @@ module.exports = function (Topics) {
         return await toggleResolve(tid, uid, false);
     };
 
-    async function toggleResolve(tid, uid, res){
+    async function toggleResolve(tid, uid, res) {
         const topicData = await Topics.getTopicData(tid);
         if (!topicData) {
             throw new Error('[[error:no-topic]]');
@@ -170,17 +170,17 @@ module.exports = function (Topics) {
 
         if (res) {
             promises.push(db.sortedSetAdd(`cid:${topicData.cid}:tids:resolved`, Date.now(), tid));
-        }
-        else{
+        } else {
             promises.push(db.sortedSetRemove(`cid:${topicData.cid}:tids:resolved`, tid));
         }
 
         const results = await Promise.all(promises);
-        topicData.resolved = res
+        topicData.events = results[1];
+        topicData.resolved = res;
         plugins.hooks.fire('action:topic.resolve', { topic: _.clone(topicData), uid });
 
         return topicData;
-    };
+    }
 
     async function togglePin(tid, uid, pin) {
         const topicData = await Topics.getTopicData(tid);
@@ -325,6 +325,4 @@ module.exports = function (Topics) {
 
         plugins.hooks.fire('action:topic.move', hookData);
     };
-
-
 };
