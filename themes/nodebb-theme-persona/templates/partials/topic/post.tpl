@@ -83,6 +83,9 @@
             {{{ if post.resolved}}}
             Resolved
             {{{ end }}}
+            {{{ if !post.resolved}}}
+            Unresolved
+            {{{ end }}}
             <a component="post/reply" href="#" class="no-select <!-- IF !privileges.topics:reply -->hidden<!-- ENDIF !privileges.topics:reply -->">[[topic:reply]]</a>
             <a component="post/quote" href="#" class="no-select <!-- IF !privileges.topics:reply -->hidden<!-- ENDIF !privileges.topics:reply -->">[[topic:quote]]</a>
         </span>
