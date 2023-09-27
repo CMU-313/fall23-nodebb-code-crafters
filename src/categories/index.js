@@ -10,6 +10,7 @@ const plugins = require('../plugins');
 const privileges = require('../privileges');
 const cache = require('../cache');
 const meta = require('../meta');
+const _topics = require('../topics');
 
 const Categories = module.exports;
 
@@ -49,6 +50,12 @@ Categories.getCategoryById = async function (data) {
         promises.push(Categories.getCategoryData(category.parentCid));
     }
     const [topics, topicCount, watchState, , parent] = await Promise.all(promises);
+    const topicsList = topics.topics;
+    const postsList = await Promise.all(topicsList.map(topic => _topics.getTopicPosts(topic, `tid:${topic.tid}:posts`, 0, -1, 1, false)));
+    // this is a terrible rule and I strongly disagree with its existence
+    // eslint-disable-next-line no-return-assign
+    topicsList.forEach((t, i) => t.resolved = postsList[i].some(p => p.content.toLowerCase().includes('resolved')));
+
 
     category.topics = topics.topics;
     category.nextStart = topics.nextStart;
