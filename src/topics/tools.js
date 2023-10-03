@@ -15,16 +15,21 @@ module.exports = function (Topics) {
     const topicTools = {};
     Topics.tools = topicTools;
 
-    topicTools.delete = async function (tid, uid) {
-        return await toggleDelete(tid, uid, true);
+    topicTools.delete = async function (tid, uid, markResolved = false) {
+        if (!markResolved) {
+            return await toggleDelete(tid, uid, true);
+        } else {
+            return await toggleDelete(tid, uid, true, markResolved);
+        }
     };
 
     topicTools.restore = async function (tid, uid) {
         return await toggleDelete(tid, uid, false);
     };
 
-    async function toggleDelete(tid, uid, isDelete) {
+    async function toggleDelete(tid, uid, isDelete, markResolved = false) {
         const topicData = await Topics.getTopicData(tid);
+
         if (!topicData) {
             throw new Error('[[error:no-topic]]');
         }
@@ -46,13 +51,15 @@ module.exports = function (Topics) {
             throw new Error('[[error:topic-already-restored]]');
         }
         if (data.isDelete) {
-            await Topics.delete(data.topicData.tid, data.uid);
+            await Topics.delete(data.topicData.tid, data.uid, markResolved);
         } else {
             await Topics.restore(data.topicData.tid);
         }
         const events = await Topics.events.log(tid, { type: isDelete ? 'delete' : 'restore', uid });
 
-        data.topicData.deleted = data.isDelete ? 1 : 0;
+        if (!markResolved) {
+            data.topicData.deleted = data.isDelete ? 1 : 0;
+        }
 
         if (data.isDelete) {
             plugins.hooks.fire('action:topic.delete', { topic: data.topicData, uid: data.uid });

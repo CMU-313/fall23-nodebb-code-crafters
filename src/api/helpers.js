@@ -45,7 +45,7 @@ exports.buildReqObject = (req, payload) => {
     };
 };
 
-exports.doTopicAction = async function (action, event, caller, { tids }) {
+exports.doTopicAction = async function (action, event, caller, { tids }, markResolved = false) {
     if (!Array.isArray(tids)) {
         throw new Error('[[error:invalid-tid]]');
     }
@@ -61,13 +61,23 @@ exports.doTopicAction = async function (action, event, caller, { tids }) {
 
     const uids = await user.getUidsFromSet('users:online', 0, -1);
 
-    await Promise.all(tids.map(async (tid) => {
-        const title = await topics.getTopicField(tid, 'title');
-        const data = await topics.tools[action](tid, caller.uid);
-        const notifyUids = await privileges.categories.filterUids('topics:read', data.cid, uids);
-        socketHelpers.emitToUids(event, data, notifyUids);
-        await logTopicAction(action, caller, tid, title);
-    }));
+    if (!markResolved) {
+        await Promise.all(tids.map(async (tid) => {
+            const title = await topics.getTopicField(tid, 'title');
+            const data = await topics.tools[action](tid, caller.uid);
+            const notifyUids = await privileges.categories.filterUids('topics:read', data.cid, uids);
+            socketHelpers.emitToUids(event, data, notifyUids);
+            await logTopicAction(action, caller, tid, title);
+        }));
+    } else {
+        await Promise.all(tids.map(async (tid) => {
+            const title = await topics.getTopicField(tid, 'title');
+            const data = await topics.tools[action](tid, caller.uid, true);
+            const notifyUids = await privileges.categories.filterUids('topics:read', data.cid, uids);
+            socketHelpers.emitToUids(event, data, notifyUids);
+            await logTopicAction(action, caller, tid, title);
+        }));
+    }
 };
 
 async function logTopicAction(action, req, tid, title) {

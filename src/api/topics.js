@@ -100,9 +100,10 @@ topicsAPI.reply = async function (caller, data) {
 };
 
 topicsAPI.delete = async function (caller, data) {
+    console.log(caller);
     await doTopicAction('delete', 'event:topic_deleted', caller, {
         tids: data.tids,
-    });
+    }, data.markResolved === true);
 };
 
 topicsAPI.restore = async function (caller, data) {

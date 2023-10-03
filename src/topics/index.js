@@ -188,6 +188,9 @@ Topics.getTopicWithPosts = async function (topicData, set, uid, start, stop, rev
             hasResolution = true;
         }
     });
+    if (deleter && !topicData.deleted) {
+        hasResolution = true;
+    }
     if (posts !== undefined && posts[0] !== undefined) {
         posts[0].resolved = hasResolution;
     }
