@@ -140,7 +140,7 @@ privsTopics.canPurge = async function (tid, uid) {
     return (purge && (owner || isModerator)) || isAdmin;
 };
 
-privsTopics.canDelete = async function (tid, uid) {
+privsTopics.canDelete = async function (tid, uid, markResolved = false) {
     const topicData = await topics.getTopicFields(tid, ['uid', 'cid', 'postcount', 'deleterUid']);
     const [isModerator, isAdministrator, isOwner, allowedTo] = await Promise.all([
         user.isModerator(uid, topicData.cid),
@@ -162,7 +162,7 @@ privsTopics.canDelete = async function (tid, uid) {
     }
 
     const { deleterUid } = topicData;
-    return allowedTo[0] && ((isOwner && (deleterUid === 0 || deleterUid === topicData.uid)) || isModerator);
+    return allowedTo[0] && ((isOwner && (markResolved || (deleterUid === 0 || deleterUid === topicData.uid))) || isModerator);
 };
 
 privsTopics.canEdit = async function (tid, uid) {

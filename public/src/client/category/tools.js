@@ -19,7 +19,8 @@ define('forum/category/tools', [
 
         components.get('topic/toggle-resolve').on('click', function () {
             console.log("Foo");
-            categoryCommand('del', '/state', 'delete', () => {}, {shouldResolve: true});
+            categoryCommand('del', '/state', 'delete', () => {}, {markResolved: true});
+            location.reload();
             return false;
         });
 
@@ -152,8 +153,10 @@ define('forum/category/tools', [
         case 'delete':
         case 'restore':
         case 'purge':
-            if (!body.shouldResolve) {
+            if (!body.markResolved) {
                 bootbox.confirm(`[[topic:thread_tools.${command}_confirm]]`, execute);
+            } else {
+                execute(true);
             }
             break;
 

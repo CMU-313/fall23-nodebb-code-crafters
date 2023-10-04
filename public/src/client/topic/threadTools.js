@@ -120,10 +120,9 @@ define('forum/topic/threadTools', [
 
         components.get('topic/toggle-resolve').on('click', function () {
             console.log("Foo");
-            categoryCommand('del', '/state', 'delete', () => { }, { shouldResolve: true });
+            topicCommand('del', '/state', 'delete', () => { location.reload(); }, { markResolved: true });
             return false;
         });
-
 
         topicContainer.on('click', '[component="topic/fork"]', function () {
             require(['forum/topic/fork'], function (fork) {
@@ -228,7 +227,11 @@ define('forum/topic/threadTools', [
         case 'delete':
         case 'restore':
         case 'purge':
-            bootbox.confirm(`[[topic:thread_tools.${command}_confirm]]`, execute);
+            if (!body.markResolved) {
+                bootbox.confirm(`[[topic:thread_tools.${command}_confirm]]`, execute);
+            } else {
+                execute(true);
+            }
             break;
 
         case 'pin':

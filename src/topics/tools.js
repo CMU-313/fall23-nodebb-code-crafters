@@ -37,11 +37,17 @@ module.exports = function (Topics) {
         if (topicData.scheduled) {
             throw new Error('[[error:invalid-data]]');
         }
-        const canDelete = await privileges.topics.canDelete(tid, uid);
+        const canDelete = await privileges.topics.canDelete(tid, uid, markResolved);
 
         const hook = isDelete ? 'delete' : 'restore';
         const data = await plugins.hooks.fire(`filter:topic.${hook}`, { topicData: topicData, uid: uid, isDelete: isDelete, canDelete: canDelete, canRestore: canDelete });
 
+        console.log(data.topicData.deleterUid);
+        console.log(data.topicData.deleted);
+        var unresolve = false;
+        if (data.topicData.deleterUid !== 0 && data.topicData.deleted === 0 && markResolved) {
+            unresolve = true;
+        }
         if ((!data.canDelete && data.isDelete) || (!data.canRestore && !data.isDelete)) {
             throw new Error('[[error:no-privileges]]');
         }
@@ -51,19 +57,19 @@ module.exports = function (Topics) {
             throw new Error('[[error:topic-already-restored]]');
         }
         if (data.isDelete) {
-            await Topics.delete(data.topicData.tid, data.uid, markResolved);
+            await Topics.delete(data.topicData.tid, data.uid, markResolved, unresolve);
         } else {
             await Topics.restore(data.topicData.tid);
         }
-        const events = await Topics.events.log(tid, { type: isDelete ? 'delete' : 'restore', uid });
-
+        var events;
         if (!markResolved) {
+            events = await Topics.events.log(tid, { type: isDelete ? 'delete' : 'restore', uid });
             data.topicData.deleted = data.isDelete ? 1 : 0;
         }
 
-        if (data.isDelete) {
+        if (data.isDelete && !data.markResolved) {
             plugins.hooks.fire('action:topic.delete', { topic: data.topicData, uid: data.uid });
-        } else {
+        } else if (!data.markResolved) {
             plugins.hooks.fire('action:topic.restore', { topic: data.topicData, uid: data.uid });
         }
         const userData = await user.getUserFields(data.uid, ['username', 'userslug']);

@@ -67,15 +67,13 @@ exports.doTopicAction = async function (action, event, caller, { tids }, markRes
             const data = await topics.tools[action](tid, caller.uid);
             const notifyUids = await privileges.categories.filterUids('topics:read', data.cid, uids);
             socketHelpers.emitToUids(event, data, notifyUids);
-            await logTopicAction(action, caller, tid, title);
+            await Action(action, caller, tid, title);
         }));
     } else {
         await Promise.all(tids.map(async (tid) => {
-            const title = await topics.getTopicField(tid, 'title');
             const data = await topics.tools[action](tid, caller.uid, true);
             const notifyUids = await privileges.categories.filterUids('topics:read', data.cid, uids);
             socketHelpers.emitToUids(event, data, notifyUids);
-            await logTopicAction(action, caller, tid, title);
         }));
     }
 };
