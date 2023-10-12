@@ -53,9 +53,8 @@ Categories.getCategoryById = async function (data) {
     const topicsList = topics.topics;
     const postsList = await Promise.all(topicsList.map(topic => _topics.getTopicPosts(topic, `tid:${topic.tid}:posts`, 0, -1, 1, false)));
     // this is a terrible rule and I strongly disagree with its existence
-    // eslint-disable-next-line no-return-assign
-    topicsList.forEach((t, i) => t.resolved = postsList[i].some(p => p.content.toLowerCase().includes('resolved')));
-
+    // eslint-disable-next-line no-return-assign,no-mixed-operators
+    topicsList.forEach((t, i) => t.resolved = (postsList[i].some(p => p.content.toLowerCase().includes('resolved')) || t.deleted === 0 && t.deleterUid !== 0));
 
     category.topics = topics.topics;
     category.nextStart = topics.nextStart;

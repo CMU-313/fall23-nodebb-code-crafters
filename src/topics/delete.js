@@ -10,13 +10,20 @@ const batch = require('../batch');
 
 
 module.exports = function (Topics) {
-    Topics.delete = async function (tid, uid) {
-        await removeTopicPidsFromCid(tid);
-        await Topics.setTopicFields(tid, {
-            deleted: 1,
-            deleterUid: uid,
-            deletedTimestamp: Date.now(),
-        });
+    Topics.delete = async function (tid, uid, markResolved = false, unmark = false) {
+        if (!markResolved) {
+            await removeTopicPidsFromCid(tid);
+            await Topics.setTopicFields(tid, {
+                deleted: 1,
+                deleterUid: uid,
+                deletedTimestamp: Date.now(),
+            });
+        } else {
+            await Topics.setTopicFields(tid, {
+                deleterUid: unmark ? 0 : uid,
+                deletedTimestamp: Date.now(),
+            });
+        }
     };
 
     async function removeTopicPidsFromCid(tid) {

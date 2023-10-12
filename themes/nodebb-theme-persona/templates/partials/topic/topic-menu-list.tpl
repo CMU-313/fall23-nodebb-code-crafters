@@ -14,6 +14,7 @@
 
 <!-- IF privileges.deletable -->
 <li <!-- IF deleted -->hidden<!-- ENDIF deleted -->><a component="topic/delete" href="#" class="<!-- IF deleted -->hidden<!-- ENDIF deleted -->"><i class="fa fa-fw fa-trash-o"></i> [[topic:thread_tools.delete]]</a></li>
+<li <!-- IF deleted -->hidden<!-- ENDIF deleted -->><a component="topic/toggle-resolved" href="#" class="<!-- IF deleted -->hidden<!-- ENDIF deleted -->"><i class="fa fa-fw fa-check-o"></i> Toggle resolve</a></li>
 {{{ if !scheduled }}}
 <li <!-- IF !deleted -->hidden<!-- ENDIF !deleted -->><a component="topic/restore" href="#" class="<!-- IF !deleted -->hidden<!-- ENDIF !deleted -->"><i class="fa fa-fw fa-history"></i> [[topic:thread_tools.restore]]</a></li>
 {{{ end }}}

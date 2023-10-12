@@ -16,7 +16,13 @@ define('forum/topic/threadTools', [
     ThreadTools.init = function (tid, topicContainer) {
         renderMenu(topicContainer);
 
+
         // function topicCommand(method, path, command, onComplete) {
+        topicContainer.on('click', '[component="topic/toggle-resolve"]', function () {
+            topicCommand('del', '/state', 'delete', { markResolved: true });
+            return false;
+        });
+
         topicContainer.on('click', '[component="topic/delete"]', function () {
             topicCommand('del', '/state', 'delete');
             return false;
@@ -111,6 +117,11 @@ define('forum/topic/threadTools', [
             });
         });
 
+        components.get('topic/toggle-resolve').on('click', function () {
+            topicCommand('del', '/state', 'delete', () => { location.reload(); }, { markResolved: true });
+            return false;
+        });
+
         topicContainer.on('click', '[component="topic/fork"]', function () {
             require(['forum/topic/fork'], function (fork) {
                 fork.init();
@@ -197,12 +208,11 @@ define('forum/topic/threadTools', [
         });
     }
 
-    function topicCommand(method, path, command, onComplete) {
+    function topicCommand(method, path, command, onComplete, body = {}) {
         if (!onComplete) {
             onComplete = function () {};
         }
         const tid = ajaxify.data.tid;
-        const body = {};
         const execute = function (ok) {
             if (ok) {
                 api[method](`/topics/${tid}${path}`, body)
@@ -215,7 +225,11 @@ define('forum/topic/threadTools', [
         case 'delete':
         case 'restore':
         case 'purge':
-            bootbox.confirm(`[[topic:thread_tools.${command}_confirm]]`, execute);
+            if (!body.markResolved) {
+                bootbox.confirm(`[[topic:thread_tools.${command}_confirm]]`, execute);
+            } else {
+                execute(true);
+            }
             break;
 
         case 'pin':

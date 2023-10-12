@@ -17,6 +17,12 @@ define('forum/category/tools', [
 
         handlePinnedTopicSort();
 
+        components.get('topic/toggle-resolve').on('click', function () {
+            categoryCommand('del', '/state', 'delete', () => {}, { markResolved: true });
+            location.reload();
+            return false;
+        });
+
         components.get('topic/delete').on('click', function () {
             categoryCommand('del', '/state', 'delete', onDeletePurgeComplete);
             return false;
@@ -124,12 +130,11 @@ define('forum/category/tools', [
         socket.on('event:topic_moved', onTopicMoved);
     };
 
-    function categoryCommand(method, path, command, onComplete) {
+    function categoryCommand(method, path, command, onComplete, body = {}) {
         if (!onComplete) {
             onComplete = function () {};
         }
         const tids = topicSelect.getSelectedTids();
-        const body = {};
         const execute = function (ok) {
             if (ok) {
                 Promise.all(tids.map(tid => api[method](`/topics/${tid}${path}`, body)))
@@ -146,7 +151,11 @@ define('forum/category/tools', [
         case 'delete':
         case 'restore':
         case 'purge':
-            bootbox.confirm(`[[topic:thread_tools.${command}_confirm]]`, execute);
+            if (!body.markResolved) {
+                bootbox.confirm(`[[topic:thread_tools.${command}_confirm]]`, execute);
+            } else {
+                execute(true);
+            }
             break;
 
         case 'pin':
