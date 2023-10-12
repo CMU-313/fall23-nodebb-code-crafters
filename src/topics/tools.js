@@ -14,13 +14,13 @@ const utils = require('../utils');
 module.exports = function (Topics) {
     const topicTools = {};
     Topics.tools = topicTools;
+    let unresolve = false;
 
     topicTools.delete = async function (tid, uid, markResolved = false) {
         if (!markResolved) {
             return await toggleDelete(tid, uid, true);
-        } else {
-            return await toggleDelete(tid, uid, true, markResolved);
         }
+        return await toggleDelete(tid, uid, true, markResolved);
     };
 
     topicTools.restore = async function (tid, uid) {
@@ -28,6 +28,7 @@ module.exports = function (Topics) {
     };
 
     async function toggleDelete(tid, uid, isDelete, markResolved = false) {
+        let events;
         const topicData = await Topics.getTopicData(tid);
 
         if (!topicData) {
@@ -44,16 +45,13 @@ module.exports = function (Topics) {
 
         console.log(data.topicData.deleterUid);
         console.log(data.topicData.deleted);
-        var unresolve = false;
         if (data.topicData.deleterUid !== 0 && data.topicData.deleted === 0 && markResolved) {
             unresolve = true;
         }
         if ((!data.canDelete && data.isDelete) || (!data.canRestore && !data.isDelete)) {
             throw new Error('[[error:no-privileges]]');
         }
-        if (data.topicData.deleted && data.isDelete) {
-            throw new Error('[[error:topic-already-deleted]]');
-        } else if (!data.topicData.deleted && !data.isDelete) {
+        if (!data.topicData.deleted && !data.isDelete) {
             throw new Error('[[error:topic-already-restored]]');
         }
         if (data.isDelete) {
@@ -61,7 +59,6 @@ module.exports = function (Topics) {
         } else {
             await Topics.restore(data.topicData.tid);
         }
-        var events;
         if (!markResolved) {
             events = await Topics.events.log(tid, { type: isDelete ? 'delete' : 'restore', uid });
             data.topicData.deleted = data.isDelete ? 1 : 0;
