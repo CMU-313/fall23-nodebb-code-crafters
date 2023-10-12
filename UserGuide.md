@@ -10,7 +10,7 @@ To mark a topic resolved:
 - Expand the post bar for the first post
 - Click the "Mark Resolved" button
 
-<center>![Visualization](https://github.com/CMU-313/fall23-nodebb-code-crafters/assets/22648562/7fbe54db-eff7-4865-b86d-5472b4ac063e)</center>
+![Visualization](https://github.com/CMU-313/fall23-nodebb-code-crafters/assets/22648562/7fbe54db-eff7-4865-b86d-5472b4ac063e)
 
 
 Creating a post in a support forum is as easy as creating a post in any forum. Creating a support forum requires you to just create a category with the word "Support" in the name. The rest is handled for you automatically.
@@ -41,7 +41,7 @@ When a post is marked resolved, the resolution button icon changes to:
 
 This quickly shows who marked the topic resolved vs who did not.
 
-<center>![Viz6](https://github.com/CMU-313/fall23-nodebb-code-crafters/assets/22648562/9d7604ad-9688-45c8-8045-6b0ad51738b3)</center>
+![Viz6](https://github.com/CMU-313/fall23-nodebb-code-crafters/assets/22648562/9d7604ad-9688-45c8-8045-6b0ad51738b3)
 
 ## CSS Changes
 
@@ -51,7 +51,7 @@ Resolved posts' resolution status now has a light green color on the topics list
 
 For private topics, the resolve option only shows for topic creators and staff/mods with access. These apply to any category with "Support" in the name.
 
-<center>![graphviz (4)](https://github.com/CMU-313/fall23-nodebb-code-crafters/assets/22648562/3aa4a9f2-d4f3-4e8f-90a6-e89abc8465c8)</center>
+![graphviz (4)](https://github.com/CMU-313/fall23-nodebb-code-crafters/assets/22648562/3aa4a9f2-d4f3-4e8f-90a6-e89abc8465c8)
 
 
 
@@ -59,7 +59,7 @@ For private topics, the resolve option only shows for topic creators and staff/m
 
 Our process, at least as we attempted to follow it.:
 
-<center>![Viz2](https://github.com/CMU-313/fall23-nodebb-code-crafters/assets/22648562/b879a915-be5d-4f09-82fc-ec6b7d92d7d7)</center>
+![Viz2](https://github.com/CMU-313/fall23-nodebb-code-crafters/assets/22648562/b879a915-be5d-4f09-82fc-ec6b7d92d7d7)
 
 
 Automated tests in `test/categories.js` specifically cover (and improve upon) existing tests regarding topic title testing.
