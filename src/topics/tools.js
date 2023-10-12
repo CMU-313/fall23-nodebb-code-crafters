@@ -14,7 +14,6 @@ const utils = require('../utils');
 module.exports = function (Topics) {
     const topicTools = {};
     Topics.tools = topicTools;
-    let unresolve = false;
 
     topicTools.delete = async function (tid, uid, markResolved = false) {
         if (!markResolved) {
@@ -29,6 +28,7 @@ module.exports = function (Topics) {
 
     async function toggleDelete(tid, uid, isDelete, markResolved = false) {
         let events;
+        let unresolve;
         const topicData = await Topics.getTopicData(tid);
 
         if (!topicData) {
