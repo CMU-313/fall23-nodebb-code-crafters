@@ -19,8 +19,7 @@ define('forum/topic/threadTools', [
 
         // function topicCommand(method, path, command, onComplete) {
         topicContainer.on('click', '[component="topic/toggle-resolve"]', function () {
-            console.log("AAAAAA");
-            topicCommand('del', '/state', 'delete', {markResolved: true});
+            topicCommand('del', '/state', 'delete', { markResolved: true });
             return false;
         });
 
@@ -119,7 +118,6 @@ define('forum/topic/threadTools', [
         });
 
         components.get('topic/toggle-resolve').on('click', function () {
-            console.log("Foo");
             topicCommand('del', '/state', 'delete', () => { location.reload(); }, { markResolved: true });
             return false;
         });

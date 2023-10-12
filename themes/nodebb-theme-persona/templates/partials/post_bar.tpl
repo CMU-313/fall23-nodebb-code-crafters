@@ -4,14 +4,22 @@
     </span>
 
     <!-- IF loggedIn -->
+    <!-- IF privileges.deletable -->
+    <!-- IF hasResolution -->
+    <button component="topic/toggle-resolve" class="btn btn-sm btn-default"]">
+        <i class="fa fa-fw fa-check-circle-o"></i><span class="visible-sm-inline visible-md-inline visible-lg-inline"></span>
+    </button>
+    <!-- ENDIF hasResolution -->
+    <!-- IF !hasResolution -->
+    <button component="topic/toggle-resolve" class="btn btn-sm btn-default"]">
+        <i class="fa fa-fw fa-circle-o"></i><span class="visible-sm-inline visible-md-inline visible-lg-inline"></span>
+    </button>
+    <!-- ENDIF !hasResolution -->
+    <!-- ENDIF privileges.deletable -->
     <button component="topic/mark-unread" class="btn btn-sm btn-default" title="[[topic:mark_unread]]">
         <i class="fa fa-fw fa-inbox"></i><span class="visible-sm-inline visible-md-inline visible-lg-inline"></span>
     </button>
-        <!-- IF privileges.deletable -->
-        <button component="topic/toggle-resolve" class="btn btn-sm btn-default"]">
-            <i class="fa fa-fw fa-check"></i><span class="visible-sm-inline visible-md-inline visible-lg-inline"></span>
-        </button>
-        <!-- ENDIF privileges.deletable -->
+
         
     <!-- ENDIF loggedIn -->
 

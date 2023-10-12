@@ -660,6 +660,26 @@ describe('Topic\'s', () => {
             assert.strictEqual(deleted, 1);
         });
 
+        it('should resolve the topic', async () => {
+            await apiTopics.delete({ uid: adminUid }, {
+                tids: [newTopic.tid],
+                cid: categoryObj.cid,
+                markResolved: true,
+            });
+            const resolver = await topics.getTopicField(newTopic.tid, 'deleterUid');
+            assert.strictEqual(resolver, adminUid);
+        });
+
+        it('should unresolve the topic', async () => {
+            await apiTopics.delete({ uid: adminUid }, {
+                tids: [newTopic.tid],
+                cid: categoryObj.cid,
+                markResolved: true,
+            });
+            const resolver = await topics.getTopicField(newTopic.tid, 'deleterUid');
+            assert.strictEqual(resolver, 1);
+        });
+
         it('should restore the topic', async () => {
             await apiTopics.restore({ uid: adminUid }, { tids: [newTopic.tid], cid: categoryObj.cid });
             const deleted = await topics.getTopicField(newTopic.tid, 'deleted');

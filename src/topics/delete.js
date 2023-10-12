@@ -11,10 +11,6 @@ const batch = require('../batch');
 
 module.exports = function (Topics) {
     Topics.delete = async function (tid, uid, markResolved = false, unmark = false) {
-        console.log("Topics.delete:");
-        console.log(markResolved);
-        console.log(unmark);
-        console.log("ok");
         if (!markResolved) {
             await removeTopicPidsFromCid(tid);
             await Topics.setTopicFields(tid, {

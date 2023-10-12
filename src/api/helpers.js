@@ -67,7 +67,7 @@ exports.doTopicAction = async function (action, event, caller, { tids }, markRes
             const data = await topics.tools[action](tid, caller.uid);
             const notifyUids = await privileges.categories.filterUids('topics:read', data.cid, uids);
             socketHelpers.emitToUids(event, data, notifyUids);
-            await Action(action, caller, tid, title);
+            await logTopicAction(action, caller, tid, title);
         }));
     } else {
         await Promise.all(tids.map(async (tid) => {
