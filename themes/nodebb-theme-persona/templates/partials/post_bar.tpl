@@ -6,7 +6,7 @@
     <!-- IF loggedIn -->
     <!-- IF hasResolution -->
     <button component="topic/toggle-resolve" class="btn btn-sm btn-default"]">
-        <i class="fa fa-fw fa-check"></i><span class="visible-sm-inline visible-md-inline visible-lg-inline"></span>
+        <i class="fa fa-fw fa-check-square-o"></i><span class="visible-sm-inline visible-md-inline visible-lg-inline"></span>
     </button>
     <!-- ENDIF hasResolution -->
     <!-- IF !hasResolution -->
