@@ -162,7 +162,8 @@ privsTopics.canDelete = async function (tid, uid, markResolved = false) {
     }
 
     const { deleterUid } = topicData;
-    return allowedTo[0] && ((isOwner && (markResolved || (deleterUid === 0 || deleterUid === topicData.uid))) || isModerator);
+    return allowedTo[0] &&
+        ((isOwner && (markResolved || (deleterUid === 0 || deleterUid === topicData.uid))) || isModerator);
 };
 
 privsTopics.canEdit = async function (tid, uid) {

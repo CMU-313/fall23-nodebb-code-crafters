@@ -18,14 +18,12 @@ define('forum/category/tools', [
         handlePinnedTopicSort();
 
         components.get('topic/toggle-resolve').on('click', function () {
-            console.log("Foo");
-            categoryCommand('del', '/state', 'delete', () => {}, {markResolved: true});
+            categoryCommand('del', '/state', 'delete', () => {}, { markResolved: true });
             location.reload();
             return false;
         });
 
         components.get('topic/delete').on('click', function () {
-            console.log("Foo, but delete.");
             categoryCommand('del', '/state', 'delete', onDeletePurgeComplete);
             return false;
         });
