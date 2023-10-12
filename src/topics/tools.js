@@ -51,9 +51,7 @@ module.exports = function (Topics) {
         if ((!data.canDelete && data.isDelete) || (!data.canRestore && !data.isDelete)) {
             throw new Error('[[error:no-privileges]]');
         }
-        if (data.topicData.deleted && data.isDelete) {
-            throw new Error('[[error:topic-already-deleted]]');
-        } else if (!data.topicData.deleted && !data.isDelete) {
+        if (!data.topicData.deleted && !data.isDelete) {
             throw new Error('[[error:topic-already-restored]]');
         }
         if (data.isDelete) {

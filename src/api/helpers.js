@@ -67,9 +67,7 @@ exports.doTopicAction = async function (action, event, caller, { tids }, markRes
             const data = await topics.tools[action](tid, caller.uid);
             const notifyUids = await privileges.categories.filterUids('topics:read', data.cid, uids);
             socketHelpers.emitToUids(event, data, notifyUids);
-            // This warning is also just wrong.
-            // eslint-disable-next-line no-undef
-            await Action(action, caller, tid, title);
+            await logTopicAction(action, caller, tid, title);
         }));
     } else {
         await Promise.all(tids.map(async (tid) => {
@@ -80,8 +78,6 @@ exports.doTopicAction = async function (action, event, caller, { tids }, markRes
     }
 };
 
-// This hint is just wrong!
-// eslint-disable-next-line no-unused-vars
 async function logTopicAction(action, req, tid, title) {
     // Only log certain actions to system event log
     const actionsToLog = ['delete', 'restore', 'purge'];
