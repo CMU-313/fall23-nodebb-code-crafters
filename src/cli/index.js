@@ -190,10 +190,11 @@ program
     .option('-s, --series', 'Run builds in series without extra processes')
     .option('-w, --webpack', 'Bundle assets with webpack', true)
     .action((targets, options) => {
-        if (program.opts().dev) {
-            process.env.NODE_ENV = 'development';
-            global.env = 'development';
-        }
+        // if (program.opts().dev) {
+        //     process.env.NODE_ENV = 'development';
+        //     global.env = 'development';
+        // }
+        process.env.NODE_ENV = 'production';
         require('./manage').build(targets.length ? targets : true, options);
     })
     .on('--help', () => {

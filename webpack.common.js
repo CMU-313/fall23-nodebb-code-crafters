@@ -67,6 +67,15 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'ignore-loader',
             },
+            {
+                test: /\.js$/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env'],
+                    },
+                },
+            },
         ],
     },
 };
