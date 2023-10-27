@@ -1,4 +1,4 @@
-FROM node:lts
+FROM node:21.0-bookworm-slim
 
 RUN mkdir -p /usr/src/app && \
     chown -R node:node /usr/src/app
