@@ -1,11 +1,10 @@
 name: Snyk Static Analysis Scan
 on:
-  pull_request_target:
-    types:
-      - opened
-    branches: 
-      - master
-      - develop
+  push:
+    branches: ["main" ]
+  pull_request:
+    branches: ["main"]
+
 jobs:
   Snyk_SAST_Scan :
     runs-on: ubuntu-latest
