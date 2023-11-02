@@ -6,7 +6,7 @@ const nconf = require('nconf');
 const crypto = require('crypto');
 const util = require('util');
 const _ = require('lodash');
-
+// Do nothing
 const sleep = util.promisify(setTimeout);
 
 const db = require('./database');
